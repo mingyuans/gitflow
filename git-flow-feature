@@ -318,6 +318,7 @@ cmd_finish() {
 		git merge --no-ff "$BRANCH"
 	else 
 		git merge --ff "$BRANCH"
+	fi
 
 	if [ $? -ne 0 ]; then
 		# oops.. we have a merge conflict!
