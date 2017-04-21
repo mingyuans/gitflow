@@ -231,6 +231,7 @@ cmd_finish() {
 	DEFINE_boolean fetch false "fetch from $ORIGIN before performing finish" F
 	DEFINE_boolean rebase false "rebase instead of merge" r
 	DEFINE_boolean keep false "keep branch after performing finish" k
+	DEFINE_boolean noff false "merge with --no-ff" n
 	parse_args "$@"
 	expand_nameprefix_arg
 
@@ -307,11 +308,16 @@ cmd_finish() {
 
 	# merge into BASE
 	git checkout "$DEVELOP_BRANCH"
-	if [ "$(git rev-list -n2 "$DEVELOP_BRANCH..$BRANCH" | wc -l)" -eq 1 ]; then
-		git merge --ff "$BRANCH"
-	else
+#	if [ "$(git rev-list -n2 "$DEVELOP_BRANCH..$BRANCH" | wc -l)" -eq 1 ]; then
+#		git merge --ff "$BRANCH"
+#	else
+#		git merge --no-ff "$BRANCH"
+#	fi
+
+	if flag noff; then 
 		git merge --no-ff "$BRANCH"
-	fi
+	else 
+		git merge --ff "$BRANCH"
 
 	if [ $? -ne 0 ]; then
 		# oops.. we have a merge conflict!
